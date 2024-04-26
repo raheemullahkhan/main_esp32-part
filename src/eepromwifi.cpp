@@ -1,29 +1,6 @@
 #include<eepromwifi.h>
-int pattern[10][1600];
-int pattern_stop[10][1];
-int max_step[10]={0,0,0,0,0,0,0,0,0,0};
-void max_step_size(int j)
 
-{
-    
 
-  max_step[j]=pattern[j][1]-pattern[j][0];
-  int i=1;
-  while(pattern[j][i]!=-1000)
-  {
-    if (abs(pattern[j][i]-pattern[j][i-1])>max_step[j])
-    max_step[j]=abs(pattern[j][i]-pattern[j][i-1]);
-    i++;
-  }
-
-}
-void max_size_of_all_pattern()
-{
-  for(int i=0;i<4;i++)
-  {
-    max_step_size(i);
-  }
-}
 
 
 
@@ -235,7 +212,7 @@ void handleData()
     // Parse the received comma-separated string into individual data points
     std::vector<int> dataPoints = parseCommaSeparatedStringToInts(data);
 
-    if (!dataPoints.empty())
+   if (!dataPoints.empty())
     {
 
         
@@ -250,7 +227,7 @@ void handleData()
             temp_data[k++] = dataPoints[j];    
         }
         
-        storePatternInEEPROM(temp_data,page,currentPattern);
+storePatternInEEPROM(temp_data,page,currentPattern);
         page++;
         i=i+32;
  }
@@ -320,7 +297,7 @@ Serial.println(number);
     server.on("/data", HTTP_POST, handleData);
     server.begin();
      Serial.println("Access Point IP address: " + WiFi.softAPIP().toString());
-   Wire.begin(); // Initialize I2C communication
+ //  Wire.begin(); // Initialize I2C communication
    }
 
 void read_all_full_pattern()

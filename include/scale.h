@@ -1,7 +1,7 @@
 #ifndef scale_h
 #define scale_h
 #include<Arduino.h>
-#include<ADS1220_WE.h>
+
 #include<motorprev.h>
 extern hw_timer_t *timer;
 extern uint8_t motor_scale_indx;

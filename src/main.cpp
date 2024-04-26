@@ -70,7 +70,7 @@ void motortask(void * p)
 void setup() {
   Serial.begin(500000);
   bluetooth_init();
- // wifi_eeprom_initialize();
+ wifi_eeprom_initialize();
    pinMode(high_pressure_signal,INPUT_PULLUP);
   motor_init();
 set_up_direction();
