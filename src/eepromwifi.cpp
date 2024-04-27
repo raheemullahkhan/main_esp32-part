@@ -171,7 +171,7 @@ switch (pattern_number)
     Serial.print(" starting addres");
     Serial.println(startAddress);
 
-    Wire.beginTransmission(EEPROM_ADDRESS);
+   /* Wire.beginTransmission(EEPROM_ADDRESS);
     Wire.write((byte)(startAddress >> 8));   // MSB
     Wire.write((byte)(startAddress & 0xFF)); // LSB
   
@@ -184,15 +184,16 @@ switch (pattern_number)
         Wire.write(2000 & 0xFF);
        
     }
-    Wire.endTransmission();
+    Wire.endTransmission();*/
+
     delay(100); // Wait for write operation to complete
 
     
-    for (uint16_t i = 0; i <32; i++)
+  /*  for (uint16_t i = 0; i <32; i++)
     {
         Serial.print(readDataFromEEPROM(number, i));
         Serial.print(',');
-    }
+    }*/
 }
 void handleData()
 {

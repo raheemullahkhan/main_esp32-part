@@ -7,6 +7,7 @@
 #include <motor.h>
 #include<bluetooth.h>
 #include <math.h>
+int  scale_steps;
 extern bool reed_error;
 
 bool motor_scale_debug=0;
@@ -28,6 +29,7 @@ int time_duration[11]={30,27,24,21,18,15,12,9,6,4,100};
 int scale_distance[11]={10,20,30,40,50,60,70,80,90,100,100};
 void motortask(void * p)
 {
+
   while(1)
   {
 
@@ -39,10 +41,10 @@ void motortask(void * p)
 }
     int duration=time_duration[speed_setting];
     //Serial.println(duration);
-        double result = (scale_data[scale_setting] / 80.0) * 100;
+        double result = (scale_distance[scale_setting] / 80.0) * 100;
 
     // Round to the nearest integer
-    int scale_steps = (int)round(result);
+     scale_steps = (int)(result);
    // Serial.println(scale_steps);
 
 
@@ -77,13 +79,15 @@ set_up_direction();
   step_count=0;    
  xTaskCreatePinnedToCore(motortask,"motor_running",3040,NULL,1,&motor_handle,1);
   initialize_all_modules();
-xTaskCreatePinnedToCore(Task1, "Task1", 30000, NULL, 1, NULL,0);
+//xTaskCreatePinnedToCore(Task1, "Task1", 30000, NULL, 1, NULL,0);
 
 
 }
 
 
 void loop() {
+  int a=3;
+Task1(&a);
 
 
 
@@ -242,3 +246,26 @@ Serial.println(force_measured);
 
 
 
+
+/*
+#include <EEPROM.h>
+
+void setup() {
+  Serial.begin(9600);  // Start serial communication at 9600 baud
+    EEPROM.begin(512);
+  delay(100);          // Allow time for the Serial Monitor to connect
+
+ 
+  EEPROM.write(5,8);
+  if (EEPROM.commit()) {
+      Serial.println("EEPROM successfully committed");
+    } else {
+      Serial.println("ERROR! EEPROM commit failed");
+    }
+   Serial.println (EEPROM.read(5));
+}
+
+void loop() {
+  // Empty loop for this example
+}
+*/

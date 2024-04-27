@@ -1,11 +1,13 @@
 #include<mytasks.h>
 #include<scale.h>
+
 TaskHandle_t Task1_Handle;
 TaskHandle_t Task2_Handle;
 void Task1(void *pvParameters) {
   (void) pvParameters;
 
   while (1) {
+   // Serial.println( scale_steps);
     handle_server();
   load_buttons_flipflop();
  save_if_a_pin_pressed();
