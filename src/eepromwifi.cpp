@@ -1,5 +1,15 @@
 #include<eepromwifi.h>
-
+#include<EEPROM.h>
+uint8_t pattern_y[10][100];
+void eeprom_write(int address,byte number)
+{
+     EEPROM.write(address,number);
+  if (EEPROM.commit()) {
+      Serial.println("EEPROM successfully committed");
+    } else {
+      Serial.println("ERROR! EEPROM commit failed");
+    }
+}
 
 
 
@@ -129,34 +139,34 @@ int startAddress; // Declare startAddress outside of the switch statement
 switch (pattern_number)
 {
     case 0:
-        startAddress = 128 * number;
+        startAddress =0;
         break;
     case 1:
-        startAddress = 128 * (number + 50);
+        startAddress = 100;
         break;
     case 2:
-        startAddress = 128 * (number + 100);
+        startAddress = 200;
         break;
     case 3:
-        startAddress = 128 * (number + 150);
+        startAddress = 300;
         break;
     case 4:
-        startAddress = 128 * (number + 200);
+        startAddress = 400;
         break;
     case 5:
-        startAddress = 128 * (number + 250);
+        startAddress = 500;
         break;
     case 6:
-        startAddress = 128 * (number + 300);
+        startAddress = 600;
         break;
     case 7:
-        startAddress = 128 * (number + 350);
+        startAddress = 700;
         break;
     case 8:
-        startAddress = 128 * (number + 400);
+        startAddress = 800;
         break;
     case 9:
-        startAddress = 128 * (number + 450);
+        startAddress = 900;
         break;
     // Add a default case if needed
     default:
@@ -170,6 +180,17 @@ switch (pattern_number)
     Serial.println(pattern_number);
     Serial.print(" starting addres");
     Serial.println(startAddress);
+    int l=0;
+    for (int i = startAddress; i < startAddress+32;i++)
+        {
+        eeprom_write(i,data[l++]);
+        
+        }
+ for (int  i = startAddress; i <32+startAddress; i++)
+    {
+        Serial.print(EEPROM.read(i));
+        Serial.print(',');
+    }
 
    /* Wire.beginTransmission(EEPROM_ADDRESS);
     Wire.write((byte)(startAddress >> 8));   // MSB
@@ -185,6 +206,9 @@ switch (pattern_number)
        
     }
     Wire.endTransmission();*/
+
+
+
 
     delay(100); // Wait for write operation to complete
 
@@ -245,10 +269,22 @@ storePatternInEEPROM(temp_data,page,currentPattern);
     }
 }
 
-void read_full_pattern(int number,int page_number)
+void read_full_pattern(int patter_number, int start_address)
 {
-      
-    int pattern_second=0;
+    Serial.print("pattern number is");
+    Serial.println(patter_number);
+    int t;
+    for(int i=start_address;i<start_address+100;i++) 
+    {
+        pattern_y[patter_number][t++]=EEPROM.read(i);
+    } 
+    
+    for (t=0;t<100;t++)
+    {
+        Serial.print(pattern_y[patter_number][t]);
+        Serial.println(',');
+    }
+   /*int pattern_second=0;
     bool end_condition=0;  
     long a;  
     for(int page=page_number;page<100+page_number;page++)
@@ -283,14 +319,25 @@ Serial.println(number);
   {
     Serial.print(pattern[number][pattern_second++]);
     Serial.print(',');
-  }
+  }*/
 }
-
+void read_all_full_pattern()
+{
+for (int i=0;i<3;i++)
+{
+read_full_pattern(i,i*100);
+}
+}
+void handle_server(void)
+{ server.handleClient();
+}
  void wifi_eeprom_initialize()
   {
+    EEPROM.begin(4096);
    WiFi.softAP(apSSID, apPassword);
     IPAddress apIP(192, 168, 4, 1);
     WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
+
 
     server.on("/", HTTP_GET, handleRoot);
     server.on("/pattern", HTTP_GET, handlePattern);
@@ -299,15 +346,7 @@ Serial.println(number);
     server.begin();
      Serial.println("Access Point IP address: " + WiFi.softAPIP().toString());
  //  Wire.begin(); // Initialize I2C communication
+ read_all_full_pattern();
    }
 
-void read_all_full_pattern()
-{
-for (int i=0;i<5;i++)
-{
-read_full_pattern(i,i*50);
-}
-}
-void handle_server(void)
-{ server.handleClient();
-}
+

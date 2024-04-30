@@ -12,7 +12,7 @@ extern bool reed_error;
 
 bool motor_scale_debug=0;
 bool kepad_debug=0;
-bool guage_debug=0;
+bool guage_debug=1;
 int high_pressure_signal=15;
 int exterme_signal=2;
 
@@ -25,8 +25,15 @@ extern uint8_t pressure_setting;
  extern bool puause_flag;
 extern bool homing;
 extern bool pause_blink;
-int time_duration[11]={30,27,24,21,18,15,12,9,6,4,100};
+int time_duration[11]={70,70,70,21,18,15,12,9,6,4,100};
 int scale_distance[11]={10,20,30,40,50,60,70,80,90,100,100};
+bool one_pattern_is_completed=0;
+void update_scale_steps()
+{
+  one_pattern_is_completed=0;
+    double result = (scale_distance[scale_setting] / 80.0) * 100;
+     scale_steps = (int)(result);
+}
 void motortask(void * p)
 {
 
@@ -40,28 +47,24 @@ void motortask(void * p)
   set_up_direction();
 }
     int duration=time_duration[speed_setting];
-    //Serial.println(duration);
-        double result = (scale_distance[scale_setting] / 80.0) * 100;
+  if(one_pattern_is_completed)
+  {
+  
+  update_scale_steps();
 
-    // Round to the nearest integer
-     scale_steps = (int)(result);
-   // Serial.println(scale_steps);
-
-
-    
-      
-      //  Serial.println(scale_setting);
+  }
 
      if(scale_setting>0&&pressure_setting>0&&speed_setting>0&&puause_flag==0&&pause_blink==0&&homing==0&&reed_error==0)
   
       {
       
         generate_steps(scale_steps, duration);
-      bluetooth_send(41);// noting extreme position
+      bluetooth_send(13);// noting extreme position
         changeDirection();
         generate_steps(scale_steps, duration);
-        bluetooth_send(41);
+        bluetooth_send(13);
         changeDirection();
+        one_pattern_is_completed=0;
       // vTaskDelay(pdMS_TO_TICKS(1));
       
 

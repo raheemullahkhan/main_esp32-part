@@ -1,4 +1,4 @@
-#include "bluetooth.h"
+/*#include "bluetooth.h"
 #include <BluetoothSerial.h>
 
 #include "BluetoothSerial.h"
@@ -28,4 +28,33 @@ if (SerialBT.available()) {
     Serial.println(c);
     delay(50); // Small delay to give time for buffer handling
   }
+}
+*/
+
+
+#include<Arduino.h>
+bool status;
+#define pulse_pin_enable 2
+#define pulse_pin 0
+void bluetooth_init(void)
+{
+pinMode(pulse_pin_enable,OUTPUT);
+  pinMode(pulse_pin,OUTPUT);
+  digitalWrite(pulse_pin,LOW);
+}
+void bluetooth_send(int a )
+{
+digitalWrite(pulse_pin_enable,LOW);
+  Serial.println("enable");
+  delay(3);
+  for(int i=0;i<a;i++)
+  {
+    digitalWrite(pulse_pin,HIGH);
+    delay(1);
+     digitalWrite(pulse_pin,LOW);
+    delay(1);
+    Serial.println(i);
+  }
+
+  digitalWrite(pulse_pin_enable,HIGH); 
 }
