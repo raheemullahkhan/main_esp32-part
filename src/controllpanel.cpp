@@ -8,6 +8,7 @@
 #include<motor.h>
 
 bool reed_error=0;
+bool wait_click_event=0;
  extern TaskHandle_t  motor_handle;
 bool finding_refrence=0;
 bool motor_on=0;
@@ -174,6 +175,12 @@ void pause_blink_function()
   digitalWrite(LED_LE,HIGH); //latches the data shifted out
   delayMicroseconds(1);
   digitalWrite(LED_LE,LOW);
+  if (wait_click_event)
+  {
+    Serial.println("wait for click event");
+    delay(1000);
+    wait_click_event=0;
+  }
  }
  void do_pause_actions_on_leds()
 {
@@ -264,7 +271,7 @@ Buttons(PRESSURE, 0, 0),                                                    //  
 Buttons(KEYPAD, 6, 1000),                                                        //    14 | Keypad #6.
 Buttons(KEYPAD, 5, 1000),                                                        //    15 | Keypad #5.
 Buttons(0,0,0),Buttons(0,0,0),Buttons(0,0,0),Buttons(0,0,0),Buttons(0,0,0),   // 16-20 | Unused.
-Buttons(PAUSE, 1, 0),                                                         //    21 | Pause(right).
+Buttons(SCALE, 1, 0),                                                         //    21 | Pause(right).
 Buttons(PAUSE, 1, 0),                                                         //    22 | Pause(left).
 Buttons(SPEED, 1, 0),                                                       //    23 | Speed increase. Hold=500ms.
 };  
@@ -322,7 +329,11 @@ void Buttons::which_action_noted()
      B_event=clicked;
     }
   prev_type=type;
-
+ if(B_event==clicked&&type!=KEYPAD&&type!=POWER)
+  {
+    wait_click_event=1;
+    
+  }
   display();
 }
 bool Buttons::readButton() {
@@ -598,18 +609,18 @@ void adjust_multiple_leds_small_off( uint8_t *multiple_program)
     if (ctl->setting <10&& value&&extra_change!=prev_extra)
     {
 
-      if(extra_change!=1)
+      //if(extra_change!=1)
       ctl->setting++;    // Only increase if setting is not at max.
-      prev_extra=extra_change;
-     // puause_flag=1;
+      //prev_extra=extra_change;
+     
     }
     if (ctl->setting && !value&&extra_change!=prev_extra) 
     {
 
       ctl->setting--;
-      if(ctl->setting==0)
-      extra_change=0;
-      prev_extra=extra_change;  
+    //  if(ctl->setting==0)
+    //  extra_change=0;
+     // prev_extra=extra_change;  
       //puause_flag=1;
     }
     Serial.print("seeting");
@@ -749,6 +760,9 @@ void do_pause_operation()
 
 void motor_pararmeter_setting(uint8_t event, uint8_t type, uint8_t id)
 {
+  if(event==clicked)
+  {
+  Serial.println("motor_paramter called"); 
 if (type == SCALE)
    {      
 
@@ -766,6 +780,7 @@ if (type == PRESSURE) {
     time_speed=1;
     uinvesal_previous_time=millis(); 
 
+  }
   }
 }
 int c=0;
@@ -957,7 +972,8 @@ void CPSelectScale::begin() {
   if(!scale_setected) //scale selection mode has choice to press scale_setting but not yet don
   LEDS[6].setState(BLINK);
   CTL_PANEL.currentState = this;                                               // Set the control panel state to CP_SEL_SCALE.
-  CTL_PANEL.adjustSetting(&CTL_PANEL.scale, 0);                            
+ // CTL_PANEL.adjustSetting(&CTL_PANEL.scale, 0);  
+  Serial.println("scale_select called");                          
 
 }
 void CPSelectScale::execute(uint8_t event, uint8_t type, uint8_t id)
@@ -983,7 +999,8 @@ void CPSelectPressure::begin() {
   if(!pressure_selected) //scale selection mode has choice to press scale_setting but not yet don
   LEDS[11].setState(BLINK);
   CTL_PANEL.currentState = this;                                               // Set the control panel state to CP_SEL_PRESSURE.
-  CTL_PANEL.adjustSetting(&CTL_PANEL.pressure, 0);                             // Decrease the pressure setting(sets the LEDs properly).
+ // CTL_PANEL.adjustSetting(&CTL_PANEL.pressure, 0);                             // Decrease the pressure setting(sets the LEDs properly).
+ Serial.println("pressure selected called");
   motor_on=1;
 }
 void CPSelectPressure::execute(uint8_t event, uint8_t type, uint8_t id) {
@@ -1010,7 +1027,8 @@ void CPSelectSpeed::begin() {
   LEDS[16].setState(BLINK);
   CTL_PANEL.currentState = this;     
   
-  CTL_PANEL.adjustSetting(&CTL_PANEL.speed, 0); 
+  //CTL_PANEL.adjustSetting(&CTL_PANEL.speed, 0); 
+  Serial.println("speed selected called");
   motor_on=1;  
 }
 void CPSelectSpeed::execute(uint8_t event, uint8_t type, uint8_t id) 

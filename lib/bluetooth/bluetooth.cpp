@@ -35,7 +35,7 @@ if (SerialBT.available()) {
 #include<Arduino.h>
 bool status;
 #define pulse_pin_enable 2
-#define pulse_pin 0
+#define pulse_pin 4
 void bluetooth_init(void)
 {
 pinMode(pulse_pin_enable,OUTPUT);

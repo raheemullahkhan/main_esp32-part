@@ -1,6 +1,5 @@
 #include<mytasks.h>
 #include<scale.h>
-
 TaskHandle_t Task1_Handle;
 TaskHandle_t Task2_Handle;
 void Task1(void *pvParameters) {
@@ -17,6 +16,7 @@ time_depended_function();
   do_saved_actions_on_leds();
   if(pause_blink&&allowed_to_enter_pause_blink)
 pause_blink_function();
+
  /* 
  if(motor_on)
  digitalWrite(enablePin,HIGH);

@@ -9,12 +9,12 @@
 #include <math.h>
 int  scale_steps;
 extern bool reed_error;
-
+bool just_started_for_setting_direction=1;
 bool motor_scale_debug=0;
-bool kepad_debug=0;
-bool guage_debug=1;
+
+bool guage_debug=0;
 int high_pressure_signal=15;
-int exterme_signal=2;
+
 
 extern uint32_t step_count;
  TaskHandle_t  motor_handle=NULL;
@@ -27,10 +27,10 @@ extern bool homing;
 extern bool pause_blink;
 int time_duration[11]={70,70,70,21,18,15,12,9,6,4,100};
 int scale_distance[11]={10,20,30,40,50,60,70,80,90,100,100};
-bool one_pattern_is_completed=0;
 void update_scale_steps()
 {
-  one_pattern_is_completed=0;
+
+  //changeDirection();
     double result = (scale_distance[scale_setting] / 80.0) * 100;
      scale_steps = (int)(result);
 }
@@ -44,27 +44,32 @@ void motortask(void * p)
 {
 
     enable_motor();
-  set_up_direction();
+  set_down_direction();
 }
     int duration=time_duration[speed_setting];
-  if(one_pattern_is_completed)
-  {
-  
-  update_scale_steps();
 
-  }
 
      if(scale_setting>0&&pressure_setting>0&&speed_setting>0&&puause_flag==0&&pause_blink==0&&homing==0&&reed_error==0)
   
       {
-      
+        if(just_started_for_setting_direction)
+         { 
+          changeDirection();
+          just_started_for_setting_direction=0;
+         }
+
         generate_steps(scale_steps, duration);
       bluetooth_send(13);// noting extreme position
-        changeDirection();
+      
+      
+      changeDirection();
         generate_steps(scale_steps, duration);
         bluetooth_send(13);
-        changeDirection();
-        one_pattern_is_completed=0;
+      changeDirection();
+        update_scale_steps();
+   
+        
+        //delay(1000);
       // vTaskDelay(pdMS_TO_TICKS(1));
       
 
@@ -78,7 +83,7 @@ void setup() {
  wifi_eeprom_initialize();
    pinMode(high_pressure_signal,INPUT_PULLUP);
   motor_init();
-set_up_direction();
+set_down_direction();
   step_count=0;    
  xTaskCreatePinnedToCore(motortask,"motor_running",3040,NULL,1,&motor_handle,1);
   initialize_all_modules();
