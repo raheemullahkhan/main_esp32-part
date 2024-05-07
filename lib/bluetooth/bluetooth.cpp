@@ -45,7 +45,7 @@ pinMode(pulse_pin_enable,OUTPUT);
 void bluetooth_send(int a )
 {
 digitalWrite(pulse_pin_enable,LOW);
-  Serial.println("enable");
+  
   delay(3);
   for(int i=0;i<a;i++)
   {
@@ -53,7 +53,7 @@ digitalWrite(pulse_pin_enable,LOW);
     delay(1);
      digitalWrite(pulse_pin,LOW);
     delay(1);
-    Serial.println(i);
+   // Serial.println(i);
   }
 
   digitalWrite(pulse_pin_enable,HIGH); 

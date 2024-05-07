@@ -23,5 +23,6 @@ void changeDirection();
 void set_down_direction();
 void set_up_direction();
 void motor_init();
+void set_first_start_direction(void);
 
 #endif // MOTOR_CONTROL_H

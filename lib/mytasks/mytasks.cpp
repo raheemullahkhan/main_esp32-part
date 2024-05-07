@@ -1,7 +1,9 @@
 #include<mytasks.h>
 #include<scale.h>
+#include<motor.h>
 TaskHandle_t Task1_Handle;
 TaskHandle_t Task2_Handle;
+
 void Task1(void *pvParameters) {
   (void) pvParameters;
 
@@ -17,19 +19,7 @@ time_depended_function();
   if(pause_blink&&allowed_to_enter_pause_blink)
 pause_blink_function();
 
- /* 
- if(motor_on)
- digitalWrite(enablePin,HIGH);
- else
- digitalWrite(enablePin,LOW);
- if(on_off>700)
- on_off=1;
-if(pause_blink&&allowed_to_enter_pause_blink)
-pause_blink_function();
-read_scale();  
-compare_force();   
-//Serial.println(force_measured-corrected_force);*/
-   // vTaskDelay(pdMS_TO_TICKS(10)); // Delay for 1 second
+
   }
 }
 
@@ -38,10 +28,7 @@ compare_force();
 void initialize_all_modules(void)
 {
     
-  //wifi_eeprom_initialize();
 
-  // read_all_full_pattern();
-  //max_size_of_all_pattern();
   allowed_restart=0;
     initialize_button_pins();
   initialize_turn_off_all_leds();

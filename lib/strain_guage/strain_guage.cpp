@@ -10,10 +10,7 @@ double value_at_extreme=0;
 void take_value_after_two_step_of_direction_change()
 {
   extreme_taking_data=1;
-  /*value_at_extreme=ads.getRawData();
-  Serial.println(value_at_extreme);
-  ads.start();
-  extreme_taking_data=0;*/
+
 }
 bool object_detected_between_extremes(bool complex_flag,uint8_t free_step,uint8_t step_count) 
 {
@@ -65,34 +62,7 @@ return a;
 void update_ads_dataRtos(void)
 {
     
-/* while(!Serial2.available())  
- delayMicroseconds(1); 
- if (Serial2.available()) {
-    // Read the incoming string until a newline character is received
-    String incomingString = Serial2.readStringUntil('\n');
-    // Convert the string to a long integer
-    if(extreme_taking_data)
-    {
-       value_at_extreme = atol(incomingString.c_str());
-       if(motor_scale_debug)
-      { 
-        Serial.println("my extreme");
-       Serial.println(value_at_extreme);
-      }
-      extreme_taking_data=0;
-    }
-    else
-        {
-            strain_guage_rtos = atol(incomingString.c_str());
-           if(guage_debug) 
-          { 
-            //Serial.print("updated");
-          
-        Serial.println(strain_guage_rtos);
-          }
-        }
-    
-  }*/
+
               strain_guage_rtos = digitalRead(high_pressure_signal);
            if(guage_debug) 
           { 

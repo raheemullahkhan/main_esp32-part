@@ -26,7 +26,19 @@ bool imagnary_direction=direction;
 bool imagnary_direction_change_test=not_reversed;
 uint64_t imagnary_step_count=0;
 
+bool just_started_for_setting_direction=1;
 
+void set_first_start_direction(void)
+{
+          if(just_started_for_setting_direction)
+         { 
+          set_up_direction();
+          Serial.print("firsttttttttttttttttttttttttttt");
+          Serial.println(direction);
+          delay(4000);
+          just_started_for_setting_direction=0;
+         }
+}
 
 
 void cheack_imagnary_direction_reversed()
@@ -170,6 +182,7 @@ void generate_steps(int number_of_steps, int pulseDuration)
    for(int j=0;j<number_of_steps;j++)
    {
     update_flags();
+
     if(complex_flag==imagnary)
     {
          cheack_imagnary_direction_reversed();
@@ -188,14 +201,22 @@ void changeDirection() {
     if(complex_flag==real)
     steps_after_direction_change=0;
     digitalWrite(DIRECTION_PIN, direction);  // Toggle direction
+    
 }
 
 void set_down_direction() {
-    digitalWrite(DIRECTION_PIN, LOW);
+    direction=0;
+    digitalWrite(DIRECTION_PIN, direction);
+ //   Serial.print("direction   down");
+  //  Serial.println(direction);
 }
 
 void set_up_direction() {
-    digitalWrite(DIRECTION_PIN, HIGH);
+    direction=1;
+    digitalWrite(DIRECTION_PIN, direction);
+ //   Serial.print("direction      up                      ");
+ //   Serial.println(direction);
+
 }
 void motor_init() {
     pinMode(DIRECTION_PIN, OUTPUT);
