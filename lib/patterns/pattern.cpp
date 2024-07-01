@@ -5,7 +5,7 @@
 #include<Arduino.h>
 #include<controllpanel.h>
 int  scale_steps;
-int time_duration[11]={70,70,70,21,18,15,12,9,6,4,100};
+int time_duration[11]={100,100,90,80,70,60,50,40,30,20,10};
 int scale_distance[11]={10,20,30,40,50,60,70,80,90,100,100};
 extern int scale_setting;
 extern int scale_setting;
@@ -21,7 +21,7 @@ void make_x_y_int(void)
 {
     for (int i=0;i<100;i++)
     {
-     xtime[i]=x[i]*10000;
+     xtime[i]=x[i]*50000;
      Serial.print(xtime[i]);
      Serial.print("\t");
      ystep[i]=y[i]*50;
@@ -90,7 +90,7 @@ while (next_stop!=-500)
   runned=ystep[i];
   next=ystep [i+1];
   next_stop=ystep[i+2];
-    int duration=xtime[i+1]-xtime[i]; 
+    int duration=(xtime[i+1]-xtime[i])*time_duration[speed_setting]/100; 
   if(next>runned)
     {
       set_up_direction();

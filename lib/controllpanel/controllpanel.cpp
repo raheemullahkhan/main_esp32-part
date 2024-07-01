@@ -178,7 +178,7 @@ void pause_blink_function()
   if (wait_click_event)
   {
     Serial.println("wait for click event");
-    delay(1000);
+    delay(2000);
     wait_click_event=0;
   }
  }
